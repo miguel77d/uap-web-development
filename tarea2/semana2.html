@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Tareas</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="contenedor">
+        <h1>TODO</h1>
+        <div class="pestañas">
+            <span class="activa">Personal</span>
+            <span>Profesional</span>
+        </div>
+        <form>
+            <input type="text" placeholder="¿Qué necesitas hacer?">
+            <button type="submit">Añadir</button>
+        </form>
+        <ul class="lista-tareas">
+            <li>
+                <input type="checkbox" checked>
+                <span class="completada">Tarea 1</span>
+                <span class="eliminar">🗑</span>
+            </li>
+            <li>
+                <input type="checkbox">
+                <span>Tarea 2</span>
+                <span class="eliminar">🗑</span>
+            </li>
+            <li>
+                <input type="checkbox">
+                <span>Tarea 3</span>
+                <span class="eliminar">🗑</span>
+            </li>
+            <li>
+                <input type="checkbox" checked>
+                <span class="completada">Tarea 4</span>
+                <span class="eliminar">🗑</span>
+            </li>
+        </ul>
+    </div>
+</body>
+</html>
