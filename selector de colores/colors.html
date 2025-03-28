@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selector de Colores Interactivo</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <div class="contenedor">
+        <h2>Selector de Colores Interactivo</h2>
+        <div class="muestra-color" id="cajaColor"></div>
+        <p class="hex-display">HEX: <span id="valorHex">#FF0000</span></p>
+
+        <!-- Controles de color -->
+        <div class="slider-contenedor">
+            <label>Rojo</label>
+            <input type="range" id="sliderR" min="0" max="255" value="255" class="slider" oninput="actualizarColor()">
+            <span id="valorR">255</span>
+        </div>
+        <div class="slider-contenedor">
+            <label>Verde</label>
+            <input type="range" id="sliderG" min="0" max="255" value="0" class="slider" oninput="actualizarColor()">
+            <span id="valorG">0</span>
+        </div>
+        <div class="slider-contenedor">
+            <label>Azul</label>
+            <input type="range" id="sliderB" min="0" max="255" value="0" class="slider" oninput="actualizarColor()">
+            <span id="valorB">0</span>
+        </div>
+
+        <!-- Botón de reinicio -->
+        <button class="boton-reiniciar" onclick="reiniciarColor()">Reiniciar</button>
+
+        <!-- Colores predefinidos -->
+        <h3>Colores Predefinidos</h3>
+        <div class="colores-predefinidos">
+            <button class="color rojo" onclick="seleccionarColor(255, 0, 0)">Rojo</button>
+            <button class="color verde" onclick="seleccionarColor(0, 255, 0)">Verde</button>
+            <button class="color azul" onclick="seleccionarColor(0, 0, 255)">Azul</button>
+            <button class="color amarillo" onclick="seleccionarColor(255, 255, 0)">Amarillo</button>
+            <button class="color magenta" onclick="seleccionarColor(255, 0, 255)">Magenta</button>
+            <button class="color cyan" onclick="seleccionarColor(0, 255, 255)">Cian</button>
+            <button class="color naranja" onclick="seleccionarColor(255, 165, 0)">Naranja</button>
+            <button class="color morado" onclick="seleccionarColor(128, 0, 128)">Morado</button>
+        </div>
+    </div>
+
+    <script>
+        function actualizarColor() {
+            let r = document.getElementById("sliderR").value;
+            let g = document.getElementById("sliderG").value;
+            let b = document.getElementById("sliderB").value;
+        
+            let colorRGB = `rgb(${r}, ${g}, ${b})`;
+            let colorHex = rgbAHex(r, g, b);
+        
+            document.getElementById("cajaColor").style.backgroundColor = colorRGB;
+            document.getElementById("valorHex").textContent = colorHex;
+            document.getElementById("valorR").textContent = r;
+            document.getElementById("valorG").textContent = g;
+            document.getElementById("valorB").textContent = b;
+        }
+        
+        function reiniciarColor() {
+            document.getElementById("sliderR").value = 255;
+            document.getElementById("sliderG").value = 0;
+            document.getElementById("sliderB").value = 0;
+            actualizarColor();
+        }
+        
+        function seleccionarColor(r, g, b) {
+            document.getElementById("sliderR").value = r;
+            document.getElementById("sliderG").value = g;
+            document.getElementById("sliderB").value = b;
+            actualizarColor();
+        }
+        
+        function rgbAHex(r, g, b) {
+            return `#${(r.toString(16)).padStart(2, '0')}${(g.toString(16)).padStart(2, '0')}${(b.toString(16)).padStart(2, '0')}`.toUpperCase();
+        }
+    </script>
+
+</body>
+</html>
