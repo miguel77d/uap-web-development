@@ -1,0 +1,95 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f5f5f5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.contenedor {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 300px;
+}
+
+h1 {
+    color: #333;
+}
+
+.pestañas {
+    display: flex;
+    justify-content: space-around;
+    font-weight: bold;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #ddd;
+}
+
+.pestañas .activa {
+    border-bottom: 2px solid #ff8800;
+}
+
+form {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+input[type="text"] {
+    flex: 1;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    background-color: #00aaff;
+    color: white;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.lista-tareas {
+    list-style: none;
+    padding: 0;
+}
+
+.lista-tareas li {
+    background: #f9f9f9;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.completada {
+    text-decoration: line-through;
+    color: gray;
+}
+
+.eliminar {
+    cursor: pointer;
+    background: none;
+    border: none;
+    color: red;
+    font-size: 1.2em;
+}
+
+.filtros {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.filtro.activo {
+    font-weight: bold;
+    text-decoration: underline;
+}
