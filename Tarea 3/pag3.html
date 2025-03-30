@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Tareas</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="contenedor">
+        <h1>TODO</h1>
+        <div class="pestañas">
+            <span class="activa">Personal</span>
+            <span>Profesional</span>
+        </div>
+        <form id="form-tarea">
+            <input type="text" id="input-tarea" placeholder="¿Qué necesitas hacer?">
+            <button type="submit">Añadir</button>
+        </form>
+        <ul class="lista-tareas"></ul>
+        <button id="btn-limpiar">Eliminar completadas</button>
+        <div class="filtros">
+            <button class="filtro activo" data-filtro="todas">Todas</button>
+            <button class="filtro" data-filtro="incompletas">Incompletas</button>
+            <button class="filtro" data-filtro="completas">Completas</button>
+        </div>
+    </div>
+
+    <script>
+        const formTarea = document.getElementById("form-tarea");
+        const inputTarea = document.getElementById("input-tarea");
+        const listaTareas = document.querySelector(".lista-tareas");
+        const btnLimpiar = document.getElementById("btn-limpiar");
+        const filtros = document.querySelectorAll(".filtro");
+
+        function agregarTarea(evento) {
+            evento.preventDefault();
+            if (inputTarea.value.trim() === "") return;
+
+            const li = document.createElement("li");
+            li.innerHTML = `
+                <input type="checkbox" class="check">
+                <span>${inputTarea.value}</span>
+                <span class="eliminar">🗑</span>
+            `;
+            listaTareas.appendChild(li);
+            inputTarea.value = "";
+            aplicarFiltro();
+        }
+
+        listaTareas.addEventListener("click", (e) => {
+            if (e.target.classList.contains("eliminar")) {
+                e.target.parentElement.remove();
+            } else if (e.target.classList.contains("check")) {
+                e.target.nextElementSibling.classList.toggle("completada");
+                aplicarFiltro();
+            }
+        });
+
+        btnLimpiar.addEventListener("click", () => {
+            document.querySelectorAll(".check:checked").forEach(tarea => tarea.parentElement.remove());
+        });
+
+        filtros.forEach(filtro => {
+            filtro.addEventListener("click", () => {
+                filtros.forEach(f => f.classList.remove("activo"));
+                filtro.classList.add("activo");
+                aplicarFiltro();
+            });
+        });
+
+        function aplicarFiltro() {
+            const tipo = document.querySelector(".filtro.activo").dataset.filtro;
+            document.querySelectorAll(".lista-tareas li").forEach(tarea => {
+                const completada = tarea.querySelector(".check").checked;
+                tarea.style.display =
+                    tipo === "todas" ||
+                    (tipo === "completas" && completada) ||
+                    (tipo === "incompletas" && !completada)
+                        ? "flex" : "none";
+            });
+        }
+
+        formTarea.addEventListener("submit", agregarTarea);
+    </script>
+</body>
+</html>
