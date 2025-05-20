@@ -1,0 +1,93 @@
+---
+
+
+export const prerender = false;
+
+import { readFileSync, existsSync } from "fs";
+
+let tareas = [];
+if (existsSync('./tareas.json')) {
+  tareas = JSON.parse(readFileSync('./tareas.json', 'utf-8'));
+}
+
+const url = new URL(Astro.request.url);
+const filtro = url.searchParams.get("filtro") || "";
+
+console.log(">>> Filtro recibido:", filtro);
+
+if (filtro === "activas") {
+  tareas = tareas.filter(t => !t.completada);
+} else if (filtro === "completadas") {
+  tareas = tareas.filter(t => t.completada);
+}
+---
+
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Gestor de Tareas</title>
+
+
+  </head>
+  <body>
+    <h1 class="text-2xl font-bold text-center text-gray-800 mb-4">Gestor de Tareas</h1>
+
+   <form method="POST" action="/agregar">
+  <input
+    type="text"
+    name="tarea"
+    placeholder="Nueva tarea"
+    required
+    class="flex-1 border border-gray-300 rounded px-2 py-1"
+  />
+  <button
+    type="submit"
+    class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-1 rounded"
+  >
+    Añadir
+  </button>
+</form>
+
+   <p class="mb-4">
+  <a href="/" class="text-blue-600 hover:underline mr-2">Todas</a>
+  <a href="/?filtro=activas" class="text-blue-600 hover:underline mr-2">Activas</a>
+  <a href="/?filtro=completadas" class="text-blue-600 hover:underline">Completadas</a>
+</p>
+
+ <form method="POST" action="/eliminar-completadas" id="form-eliminar-completadas">
+  <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-4 py-1 rounded">
+    Eliminar tareas completadas
+  </button>
+</form>
+
+    <ul class="space-y-2">
+  {tareas.length === 0 ? (
+    <li class="text-gray-600">No hay tareas todavía</li>
+  ) : (
+    tareas.map((tarea, index) => (
+      <li class="bg-white border border-gray-300 rounded px-4 py-2 flex items-center justify-between">
+        <form method="POST" action="/toggle" class="flex items-center gap-2 flex-1">
+          <input type="hidden" name="index" value={index} />
+          <input
+           type="checkbox"
+           name="completada"
+           checked={tarea.completada}
+           data-action="toggle"
+           class="cursor-pointer"
+          />
+          <span class={tarea.completada ? "line-through text-gray-500" : ""}>
+            {tarea.texto}
+          </span>
+        </form>
+
+        <form method="POST" action="/eliminar">
+  <input type="hidden" name="index" value={index} />
+  <button type="submit" class="text-red-600 hover:text-red-800">❌</button>
+</form>
+      </li>
+    ))
+  )}
+</ul>
+<script type="module" src="/src/scripts/tareas.js"></script>
+  </body>
+</html>
