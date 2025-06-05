@@ -1,0 +1,45 @@
+{
+  "personal": [
+    {
+      "id": 1749077285334,
+      "texto": "hola",
+      "completada": false
+    },
+    {
+      "id": 1749077307086,
+      "texto": "redes",
+      "completada": false
+    },
+    {
+      "id": 1749080124775,
+      "texto": "redes",
+      "completada": false
+    },
+    {
+      "id": 1749080127076,
+      "texto": "aplicada",
+      "completada": false
+    },
+    {
+      "id": 1749080133392,
+      "texto": "prog",
+      "completada": false
+    },
+    {
+      "id": 1749080135719,
+      "texto": "fisica",
+      "completada": false
+    },
+    {
+      "id": 1749080541520,
+      "texto": "res",
+      "completada": false
+    },
+    {
+      "id": 1749080578826,
+      "texto": "nueva",
+      "completada": false
+    }
+  ],
+  "universidad": []
+}
