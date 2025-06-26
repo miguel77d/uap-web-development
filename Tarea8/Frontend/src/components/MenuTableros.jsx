@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useUIStore } from '../store/uiStore';
+import { Link } from 'react-router-dom';
 
 export default function MenuTableros() {
   const [tableros, setTableros] = useState([]);
@@ -65,7 +66,7 @@ export default function MenuTableros() {
   };
 
   return (
-    <div className="bg-gray-800 p-4 rounded-md shadow-md max-w-md mx-auto mt-0">
+    <div className="bg-gray-800 p-4 rounded-md shadow-md max-w-md mx-auto mt-12">
       <h2 className="text-white font-semibold mb-2">Tableros</h2>
 
       <div className="flex gap-2 mb-4">
@@ -109,6 +110,14 @@ export default function MenuTableros() {
             </button>
           </div>
         ))}
+      </div>
+       <div className="mt-4 text-center">
+        <Link
+          to="/configuracion"
+          className="text-blue-400 hover:text-blue-300 flex items-center justify-center gap-2"
+        >
+          <span className="text-xl">⚙</span> <span>Configuración</span>
+        </Link>
       </div>
     </div>
   );

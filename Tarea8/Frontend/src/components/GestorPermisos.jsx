@@ -10,7 +10,7 @@ export default function GestorPermisos() {
   const [rol, setRol] = useState('viewer');
 
   const compartir = async () => {
-    const res = await fetch('/api/permisos', {
+    const res = await fetch('http://localhost:3000/api/permisos', {
       method: 'POST',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -20,12 +20,13 @@ export default function GestorPermisos() {
       setEmail('');
       refetch();
     } else {
-      alert('Error al compartir');
+       const error = await res.json();
+  alert(error.error || 'Error al compartir');
     }
   };
 
   const cambiarRol = async (id, nuevoRol) => {
-    await fetch(`/api/permisos/${id}`, {
+    await fetch('http://localhost:3000/api/permisos', {
       method: 'PATCH',
       credentials: 'include',
       headers: { 'Content-Type': 'application/json' },
@@ -35,7 +36,7 @@ export default function GestorPermisos() {
   };
 
   const eliminarPermiso = async (id) => {
-    await fetch(`/api/permisos/${id}`, {
+    await fetch('http://localhost:3000/api/permisos', {
       method: 'DELETE',
       credentials: 'include',
     });

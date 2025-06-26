@@ -5,6 +5,7 @@ const prisma = new PrismaClient();
 
 const requireAuth = require('../middlewares/authMiddleware');
 
+// POST /api/permisos → Crear o actualizar permiso
 router.post('/', requireAuth, async (req, res) => {
   const { tableroId, email, rol } = req.body;
 
@@ -12,7 +13,7 @@ router.post('/', requireAuth, async (req, res) => {
     return res.status(400).json({ error: 'Faltan datos' });
   }
 
-  // Verificamos que el usuario que hace el pedido sea owner del tablero
+  // Verificar que el usuario actual es owner del tablero
   const permisoActual = await prisma.permiso.findUnique({
     where: {
       usuarioId_tableroId: {
@@ -26,7 +27,7 @@ router.post('/', requireAuth, async (req, res) => {
     return res.status(403).json({ error: 'No sos owner del tablero' });
   }
 
-  // Buscamos el usuario al que se va a compartir
+  // Buscar al usuario destino por email
   const usuarioDestino = await prisma.usuario.findUnique({
     where: { email },
   });
@@ -35,7 +36,7 @@ router.post('/', requireAuth, async (req, res) => {
     return res.status(404).json({ error: 'Usuario no encontrado' });
   }
 
-  // Creamos o actualizamos el permiso
+  // Crear o actualizar permiso
   const nuevoPermiso = await prisma.permiso.upsert({
     where: {
       usuarioId_tableroId: {
@@ -53,7 +54,8 @@ router.post('/', requireAuth, async (req, res) => {
 
   res.json({ msg: 'Permiso asignado', permiso: nuevoPermiso });
 });
-// GET /api/permisos?tableroId=8
+
+// GET /api/permisos?tableroId=...
 router.get('/', requireAuth, async (req, res) => {
   const tableroId = parseInt(req.query.tableroId);
 
@@ -81,4 +83,41 @@ router.get('/', requireAuth, async (req, res) => {
     res.status(500).json({ error: 'Error interno' });
   }
 });
+
+// PATCH /api/permisos/:id → Modificar el rol de un permiso
+router.patch('/:id', requireAuth, async (req, res) => {
+  const id = parseInt(req.params.id);
+  const { rol } = req.body;
+
+  if (!rol) return res.status(400).json({ error: 'Falta el nuevo rol' });
+
+  try {
+    const permiso = await prisma.permiso.update({
+      where: { id },
+      data: { rol },
+    });
+
+    res.json({ msg: 'Rol actualizado', permiso });
+  } catch (error) {
+    console.error('Error al actualizar permiso:', error);
+    res.status(500).json({ error: 'Error interno al actualizar permiso' });
+  }
+});
+
+// DELETE /api/permisos/:id → Eliminar un permiso
+router.delete('/:id', requireAuth, async (req, res) => {
+  const id = parseInt(req.params.id);
+
+  try {
+    await prisma.permiso.delete({
+      where: { id },
+    });
+
+    res.json({ msg: 'Permiso eliminado' });
+  } catch (error) {
+    console.error('Error al eliminar permiso:', error);
+    res.status(500).json({ error: 'Error interno al eliminar permiso' });
+  }
+});
+
 module.exports = router;

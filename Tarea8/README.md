@@ -1,10 +1,11 @@
-# Tarea 8 – Gestor de Tareas: Backend + Frontend con Autenticación y Autorización
+
+# Tarea 8 - Gestor de Tareas: Backend + Frontend con Autenticación y Autorización
 
 Este proyecto consiste en una aplicación de gestión de tareas dividida en dos partes: **backend** (API REST con Express y Prisma) y **frontend** (React con Zustand + React Query). Incluye funcionalidades completas de autenticación, autorización, permisos por tablero y persistencia de datos en base de datos.
 
 ---
 
-## Estructura del Repositorio
+##  Estructura del Repositorio
 
 ```
 Tarea8/
@@ -16,9 +17,9 @@ Tarea8/
 
 ---
 
-## Tecnologías Utilizadas
+## 🛠 Tecnologías Utilizadas
 
-### Backend:
+### Backend
 - Node.js + Express
 - Prisma ORM + SQLite
 - JWT + Cookies HTTP-only
@@ -26,82 +27,92 @@ Tarea8/
 - Middlewares personalizados
 - CORS
 
-### Frontend:
+### Frontend
 - React + Vite
-- Zustand para estado local
-- React Query para estado del servidor
-- Tailwind CSS para estilos
+- Zustand (estado local)
+- React Query (estado del servidor)
+- Tailwind CSS (estilos)
 - React Router DOM
 
 ---
 
-## Funcionalidades Principales
+##  Funcionalidades Principales
 
 ### Autenticación
-- Registro y login
-- Token JWT en cookie segura
-- Middleware de autenticación
-- Cierre de sesión (logout)
+- Registro y login de usuarios
+- Token JWT guardado en cookie segura
+- Middleware para proteger rutas
+- Logout seguro
 
 ### Autorización con permisos
-- Sistema de roles por tablero: `owner`, `editor`, `viewer`
-- Middleware de verificación de permisos
+- Sistema de roles: `owner`, `editor`, `viewer`
+- Permisos por tablero
+- Middleware para verificar permisos
 
 ### Gestión de Tableros
-- Crear, editar, eliminar tableros (solo `owner`)
-- Compartir tableros y cambiar roles
+- Crear, listar, eliminar tableros (solo `owner`)
+- Compartir tableros con otros usuarios
+- Cambiar roles
 
 ### Gestión de Tareas
-- Crear, listar, editar, eliminar
-- Filtros: estado (pendiente/completada), búsqueda, paginación
-- Eliminar tareas completadas
+- Crear, editar, eliminar tareas
+- Filtros por estado (pendiente/completada)
+- Búsqueda por texto
+- Paginación
+- Eliminar todas las completadas
 
-### Configuraciones
-- Preferencias por usuario (ej: texto en mayúsculas, intervalo de refresco)
+### Configuraciones Personalizadas
+- Intervalo de refresco
+- Visualización en mayúsculas
 
 ---
 
-## Instalación y Ejecución
+##  Instalación y Ejecución
 
-###  Backend
+### 🔧 Backend
 
-1. Clonar el repo y entrar al backend:
 ```bash
 cd Tarea8/Backend/api-server
 npm install
 ```
 
-2. Crear archivo `.env`:
+Crear archivo `.env` con:
+
 ```
 DATABASE_URL="file:./dev.db"
 JWT_SECRET=tu_clave_secreta_segura
 ```
 
-3. Ejecutar migraciones y cargar datos:
+Inicializar base de datos y datos de prueba:
+
 ```bash
 npx prisma migrate dev --name init
 node scripts/crearDatosIniciales.js
 ```
 
-4. Iniciar servidor:
+Iniciar el servidor:
+
 ```bash
 npm run dev
 ```
 
-###  Frontend
+---
 
-1. Ir a la carpeta del frontend:
+### Frontend
+
 ```bash
 cd Tarea8/Frontend/gestor-tareas
 npm install
 ```
 
-2. Configurar `.env` si es necesario:
+Editar `.env` si es necesario:
+
 ```
 VITE_API_URL=http://localhost:3000/api
 ```
 
-3. Ejecutar aplicación:
+Ejecutar aplicación:
+
 ```bash
 npm run dev
 ```
@@ -110,8 +121,11 @@ npm run dev
 
 ##  Cómo Probar
 
-### 1. Login de prueba
-POST `http://localhost:3000/api/auth/login`
+### Login de prueba (Postman o navegador)
+
+```
+POST http://localhost:3000/api/auth/login
+```
 
 ```json
 {
@@ -120,72 +134,79 @@ POST `http://localhost:3000/api/auth/login`
 }
 ```
 
-🟢 Guarda la cookie en el navegador. El frontend detecta la sesión automáticamente.
-
-### 2. Frontend
-- Accedé a `http://localhost:5173`
-- Crea tableros, tareas, cambia filtros
-- Compartí tableros desde la vista de configuración
+- Guarda la cookie en el navegador.
+- Accedé al frontend en `http://localhost:5173`.
 
 ---
 
-##  Roles y Permisos
+## Roles y Permisos
 
-| Rol     | Acciones Permitidas                            |
-|---------|------------------------------------------------|
-| Owner   | Todas: editar, eliminar, compartir             |
-| Editor  | Crear, editar, completar y borrar tareas       |
-| Viewer  | Solo ver tareas y tableros                     |
+| Rol    | Acciones permitidas                         |
+|--------|----------------------------------------------|
+| Owner  | Crear, editar, eliminar y compartir tableros |
+| Editor | Crear, editar, eliminar tareas               |
+| Viewer | Solo puede ver tareas/tableros               |
 
 ---
 
-## Estructura del Proyecto
+##  Endpoints de la API
 
-### Backend (api-server)
-```
-controllers/       → Lógica de rutas
-middlewares/       → Autenticación y permisos
-routes/            → Agrupación de endpoints
-scripts/           → Carga de datos iniciales y permisos
-prisma/schema.prisma → Base de datos
-index.js           → Punto de entrada del servidor
-```
+###  Autenticación
 
-### Frontend (gestor-tareas)
-```
-src/
-├── components/    → Componentes de UI
-├── pages/         → Páginas principales
-├── store/         → Zustand
-├── hooks/         → React Query
-├── api/           → Llamadas a la API
-└── App.jsx        → Rutas principales
-```
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `POST /api/auth/logout`
+
+###  Usuario Actual
+
+- `GET /api/perfil`
+
+###  Tableros
+
+- `GET /api/tableros`
+- `POST /api/tableros`
+- `DELETE /api/tableros/:id`
+
+###  Permisos
+
+- `POST /api/permisos`
+- `PATCH /api/permisos/:id`
+- `DELETE /api/permisos/:id`
+
+###  Tareas
+
+- `GET /api/tareas?tableroId=1&estado=pendiente&q=texto&page=1&limit=10`
+- `POST /api/tareas`
+- `PUT /api/tareas/:id`
+- `PATCH /api/tareas/:id`
+- `DELETE /api/tareas/:id`
+- `DELETE /api/tareas/completadas?tableroId=1`
+
+###  Configuración
+
+- `GET /api/configuracion`
+- `PUT /api/configuracion`
 
 ---
 
 ##  Seguridad Aplicada
 
-- JWT en cookie HTTP-only
-- Autenticación robusta
-- Autorización por rol en cada acción
-- Validaciones básicas de entrada
-- CORS habilitado
+- Contraseñas hasheadas con `bcrypt`
+- JWT en cookies HTTP-only
+- Rutas protegidas por middleware
+- Verificación de permisos por rol
+- CORS habilitado solo para orígenes permitidos
 
 ---
 
-## Scripts disponibles
+##  Scripts Disponibles
 
-### Backend
-- `crearDatosIniciales.js`: crea usuarios, tableros y tareas de prueba
-- `agregarPermiso.js`: agrega roles a usuarios sobre tableros
-
----
-
-##  Notas Finales
-
-- El sistema está listo para integrarse con cualquier frontend moderno.
-- Todas las funcionalidades básicas y avanzadas están cubiertas.
-- Documentación, autenticación y seguridad mínimas implementadas correctamente.
+- `crearDatosIniciales.js`: carga usuarios, tableros y tareas de prueba
+- `agregarPermiso.js`: asigna permisos manualmente
 
 ---
+
+## Notas Finales
+
+- El sistema está listo para producción con integración completa entre frontend y backend.
+- Se respetan buenas prácticas de autenticación, autorización y estructura RESTful.

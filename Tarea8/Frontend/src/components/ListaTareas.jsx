@@ -134,8 +134,7 @@ function ListaTareas() {
   return (
     <main className="min-h-screen bg-gray-900 text-white flex justify-center items-center px-4">
       <div className="w-full max-w-md p-6 bg-gray-800 rounded-lg shadow-lg space-y-5">
-        <MenuTableros />
-
+      
         {/* Formulario para agregar o editar tarea */}
         <form onSubmit={handleSubmit} className="flex gap-2">
           <input
@@ -253,17 +252,6 @@ function ListaTareas() {
 
         {/* Paginación */}
         <Paginacion totalPaginas={totalPaginas} />
-
-        {/* Link a configuración */}
-        <div className="text-center mb-4">
-          <a
-            href="/configuracion"
-            className="inline-block text-blue-400 hover:text-blue-600 underline transition"
-          >
-            ⚙️ Configuración
-          </a>
-        </div>
-
         {/* 👇 Aca sí va el Gestor de permisos */}
         <GestorPermisos />
       </div>
