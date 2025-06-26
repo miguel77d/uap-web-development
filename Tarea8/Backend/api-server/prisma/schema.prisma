@@ -1,0 +1,58 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  nombre String?
+  id            Int                     @id @default(autoincrement())
+  email         String                  @unique
+  password      String
+  permisos      Permiso[]
+  tableros      Tablero[]               @relation("UsuarioTableros") 
+  tareas        Tarea[]                 
+  configuracion ConfiguracionUsuario?   
+}
+
+model Tablero {
+  id             Int       @id @default(autoincrement())
+  nombre         String
+  propietarioId  Int
+  propietario    Usuario   @relation("UsuarioTableros", fields: [propietarioId], references: [id]) 
+  tareas         Tarea[]
+  permisos       Permiso[]
+}
+
+model Tarea {
+  id          Int      @id @default(autoincrement())
+  descripcion String
+  completada  Boolean  @default(false)
+  tableroId   Int
+  usuarioId   Int
+  usuario     Usuario  @relation(fields: [usuarioId], references: [id])
+  tablero     Tablero  @relation(fields: [tableroId], references: [id])
+}
+model ConfiguracionUsuario {
+  id          Int      @id @default(autoincrement())
+  usuarioId   Int      @unique
+  refetchSegs Int      @default(10)
+  mayusculas  Boolean  @default(false)
+  usuario     Usuario  @relation(fields: [usuarioId], references: [id])
+}
+model Permiso {
+  id         Int      @id @default(autoincrement())
+  usuarioId  Int
+  tableroId  Int
+  rol        String   // valores posibles: "owner", "editor", "viewer"
+
+  usuario    Usuario  @relation(fields: [usuarioId], references: [id])
+  tablero    Tablero  @relation(fields: [tableroId], references: [id])
+
+  @@unique([usuarioId, tableroId]) // un usuario no puede tener múltiples permisos para el mismo tablero
+}
