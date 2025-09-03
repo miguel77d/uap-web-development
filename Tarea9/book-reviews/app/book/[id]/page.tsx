@@ -2,8 +2,14 @@ import Link from 'next/link';
 import { getBookById } from '../../lib/googleBooks';
 import ClientReviews from '../../components/ClientReviews';
 
-export default async function BookDetailPage({ params }: { params: { id: string } }) {
-  const book = await getBookById(params.id);
+type Params = { id: string };
+
+export default async function BookDetailPage(
+  props: { params: Promise<Params> }          // 👈 params es Promise
+) {
+  const { id } = await props.params;           // 👈 hay que hacer await
+  const book = await getBookById(id);
+
   if (!book) {
     return (
       <main className="max-w-4xl mx-auto p-6">
@@ -27,7 +33,7 @@ export default async function BookDetailPage({ params }: { params: { id: string 
       <header className="flex gap-4">
         {img ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={img} alt={info.title} className="w-40 h-56 object-cover rounded" />
+          <img src={img} alt={info.title ?? ''} className="w-40 h-56 object-cover rounded" />
         ) : (
           <div className="w-40 h-56 bg-slate-700 rounded" />
         )}
@@ -50,13 +56,13 @@ export default async function BookDetailPage({ params }: { params: { id: string 
         <h2 className="text-xl font-semibold">Descripción</h2>
         <p className="mt-2 opacity-90 whitespace-pre-line">
           {info.description
-      ? info.description.replace(/<[^>]+>/g, '') // borra etiquetas
-      : 'Sin descripción.'}
+            ? info.description.replace(/<[^>]+>/g, '') // borra etiquetas
+            : 'Sin descripción.'}
         </p>
       </section>
 
       {/* Reseñas */}
-      <ClientReviews volumeId={book.id} />
+      <ClientReviews volumeId={id} />
     </main>
   );
 }

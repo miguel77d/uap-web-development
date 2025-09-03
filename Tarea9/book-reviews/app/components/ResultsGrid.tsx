@@ -1,8 +1,9 @@
 'use client';
 
 import Link from 'next/link';
+import type { GoogleBookItem } from '@/types/book'; // 👈 usamos tu tipo
 
-type Props = { items: any[] };
+type Props = { items: GoogleBookItem[] };           // 👈 nada de any
 
 export default function ResultsGrid({ items }: Props) {
   if (!items || items.length === 0) {
@@ -24,7 +25,7 @@ export default function ResultsGrid({ items }: Props) {
               <div className="flex gap-3">
                 {img ? (
                   // eslint-disable-next-line @next/next/no-img-element
-                  <img src={img} alt={info.title} className="w-20 h-28 object-cover rounded" />
+                  <img src={img} alt={info.title ?? ''} className="w-20 h-28 object-cover rounded" />
                 ) : (
                   <div className="w-20 h-28 bg-slate-700 rounded" />
                 )}
