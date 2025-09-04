@@ -1,0 +1,29 @@
+name: CI (PR)
+
+on:
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    # Todo corre DENTRO de Tarea9/book-reviews
+    defaults:
+      run:
+        working-directory: Tarea9/book-reviews
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: Tarea9/book-reviews/package-lock.json
+
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test:ci
+      - run: npm run build
