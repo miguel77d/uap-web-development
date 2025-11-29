@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { connectToDB } from "@/lib/db";
 import User from "@/models/User";
-import { registerSchema } from "@/lib/validators";
+import { registerSchema } from "@/lib/validation";
 
 export async function POST(req: NextRequest) {
   await connectToDB();

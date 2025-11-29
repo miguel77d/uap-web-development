@@ -1,43 +1,59 @@
 // lib/auth.ts
+import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { cookies } from "next/headers";
-import { NextRequest, NextResponse } from "next/server";
+import { NextApiRequest } from "next";
+import { User, IUser } from "../models/user";
 
-const COOKIE_NAME = "session";
 const JWT_SECRET = process.env.JWT_SECRET!;
 
-export function signSession(payload: { userId: string }) {
-  return jwt.sign(payload, JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN || "7d" });
+// Hashea una contraseña en texto plano
+export async function hashPassword(plainPassword: string) {
+  const saltRounds = 10;
+  return bcrypt.hash(plainPassword, saltRounds);
 }
 
-export function setSessionCookie(token: string) {
-  cookies().set(COOKIE_NAME, token, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: 60 * 60 * 24 * 7, // 7 días
+// Compara una contraseña en texto plano con el hash guardado
+export async function verifyPassword(
+  plainPassword: string,
+  hashedPassword: string
+) {
+  return bcrypt.compare(plainPassword, hashedPassword);
+}
+
+// Crea un JWT con info básica del usuario
+export function createAuthToken(user: IUser) {
+  const payload = {
+    userId: user._id.toString(),
+    email: user.email,
+  };
+
+  return jwt.sign(payload, JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN || "7d",
   });
 }
 
-export function clearSessionCookie() {
-  cookies().set(COOKIE_NAME, "", { httpOnly: true, maxAge: 0, path: "/" });
-}
+// Lee la cookie auth_token de la request y devuelve los datos del usuario
+export function getUserFromRequest(req: NextApiRequest) {
+  const cookieHeader = req.headers.cookie;
+  if (!cookieHeader) return null;
 
-export function getUserFromRequest(req: NextRequest): { userId: string } | null {
-  const token = req.cookies.get(COOKIE_NAME)?.value;
+  const cookies = Object.fromEntries(
+    cookieHeader.split(";").map((c) => {
+      const [k, v] = c.trim().split("=");
+      return [k, decodeURIComponent(v)];
+    })
+  );
+
+  const token = cookies["auth_token"];
   if (!token) return null;
+
   try {
-    return jwt.verify(token, JWT_SECRET) as any;
-  } catch {
+    const decoded = jwt.verify(token, JWT_SECRET) as {
+      userId: string;
+      email: string;
+    };
+    return decoded;
+  } catch (err) {
     return null;
   }
-}
-
-export function requireAuth(req: NextRequest) {
-  const user = getUserFromRequest(req);
-  if (!user) {
-    return NextResponse.json({ error: "No autenticado" }, { status: 401 });
-  }
-  return user;
 }

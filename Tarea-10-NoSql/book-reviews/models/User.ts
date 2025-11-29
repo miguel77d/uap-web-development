@@ -1,10 +1,32 @@
-// models/User.ts
-import { Schema, model, models } from "mongoose";
+// models/user.ts
+import mongoose, { Schema, Model, Document } from "mongoose";
 
-const userSchema = new Schema({
-  email: { type: String, unique: true, required: true, index: true },
-  passwordHash: { type: String, required: true },
-  name: { type: String }
-}, { timestamps: true });
+export interface IUser extends Document {
+  email: string;
+  passwordHash: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
-export default models.User || model("User", userSchema);
+const UserSchema = new Schema<IUser>(
+  {
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+      lowercase: true,
+      trim: true,
+    },
+    passwordHash: {
+      type: String,
+      required: true,
+    },
+  },
+  {
+    timestamps: true, // agrega createdAt y updatedAt automáticamente
+  }
+);
+
+// Evitamos recompilar el modelo en cada hot-reload de Next
+export const User: Model<IUser> =
+  mongoose.models.User || mongoose.model<IUser>("User", UserSchema);

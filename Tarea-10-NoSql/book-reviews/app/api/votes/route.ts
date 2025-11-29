@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/lib/db";
 import Vote from "@/models/Vote";
-import { voteSchema } from "@/lib/validators";
+import { voteSchema } from "@/lib/validation";
 import { requireAuth } from "@/lib/auth";
 
 export async function POST(req: NextRequest) {

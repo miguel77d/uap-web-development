@@ -1,11 +1,41 @@
-// models/Review.ts
-import { Schema, model, models } from "mongoose";
+// models/review.ts
+import mongoose, { Schema, Document, Model } from "mongoose";
 
-const reviewSchema = new Schema({
-  bookId: { type: String, required: true, index: true },
-  userId: { type: Schema.Types.ObjectId, ref: "User", required: true, index: true },
-  rating: { type: Number, min: 1, max: 5, required: true },
-  comment: { type: String, maxlength: 500 }
-}, { timestamps: true });
+export interface IReview extends Document {
+  userId: string;
+  bookId: string;
+  rating: number;
+  comment: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 
-export default models.Review || model("Review", reviewSchema);
+const ReviewSchema = new Schema<IReview>(
+  {
+    userId: {
+      type: String,
+      required: true,
+    },
+    bookId: {
+      type: String,
+      required: true, // Google Books ID
+    },
+    rating: {
+      type: Number,
+      min: 1,
+      max: 5,
+      required: true,
+    },
+    comment: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+export const Review: Model<IReview> =
+  mongoose.models.Review || mongoose.model<IReview>("Review", ReviewSchema);

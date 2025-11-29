@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/lib/db";
 import Favorite from "@/models/Favorite";
-import { favoriteSchema } from "@/lib/validators";
+import { favoriteSchema } from "@/lib/validation";
 import { requireAuth } from "@/lib/auth";
 
 export async function GET(req: NextRequest) {

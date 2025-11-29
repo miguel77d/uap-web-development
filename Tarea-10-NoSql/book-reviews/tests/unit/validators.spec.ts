@@ -1,6 +1,6 @@
 // tests/unit/validators.spec.ts
 import { describe, it, expect } from "vitest";
-import { reviewCreateSchema } from "@/lib/validators";
+import { reviewCreateSchema } from "@/lib/validation";
 
 describe("validators", () => {
   it("review válida", () => {
