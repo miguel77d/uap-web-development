@@ -18,6 +18,9 @@
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.3",
+    "@tanstack/react-query": "^5.90.11",
+    "@web3modal/ethereum": "^2.7.1",
+    "@web3modal/wagmi": "^5.1.11",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "isomorphic-dompurify": "^2.26.0",
@@ -25,7 +28,9 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "tailwind-merge": "^3.3.1",
-    "uuid": "^11.1.0"
+    "uuid": "^11.1.0",
+    "viem": "^2.40.3",
+    "wagmi": "^3.0.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

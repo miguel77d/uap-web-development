@@ -1,33 +1,28 @@
 // src/web3.ts
-import { http, createConfig } from 'wagmi'
-import { sepolia } from 'wagmi/chains'
 import { defaultWagmiConfig } from '@web3modal/wagmi/react/config'
+import { sepolia } from 'wagmi/chains'
 import { createWeb3Modal } from '@web3modal/wagmi/react'
 
-// ⚠️ Reemplazá con tu Project ID de WalletConnect (gratis)
-export const WALLETCONNECT_PROJECT_ID = import.meta.env.VITE_WC_PROJECT_ID as string;
-// RPC público provisto en el enunciado
-export const RPC_URL = 'https://ethereum-sepolia-rpc.publicnode.com'
+// 1) Definimos el ID del proyecto (Web3Modal Project ID)
+// 👇 CONSEJO: usá un projectId REAL creado en https://cloud.walletconnect.com/
+// por ahora dejamos uno de prueba (pero deberías reemplazarlo)
+export const projectId = 'demo-project-id-1234';
 
-// 1) Config de wagmi (chains + transports)
-export const chains = [sepolia] as const
-
-const wagmiConfig = createConfig(
-  defaultWagmiConfig({
-    chains,
-    projectId: WALLETCONNECT_PROJECT_ID,
-    transports: {
-      [sepolia.id]: http(RPC_URL),
-    }
-  })
-)
-
-// 2) Inicializar Web3Modal (UI de conexión)
-createWeb3Modal({
-  wagmiConfig,
-  projectId: WALLETCONNECT_PROJECT_ID,
-  enableAnalytics: false,
-  themeMode: 'dark'
+// 2) Configuración principal de wagmi + viem
+export const wagmiConfig = defaultWagmiConfig({
+  chains: [sepolia],
+  projectId,
+  metadata: {
+    name: 'Faucet Token DApp',
+    description: 'App React para reclamar tokens del FaucetToken',
+    url: 'http://localhost:3000',
+    icons: ['https://avatars.githubusercontent.com/u/37784886']
+  }
 })
 
-export { wagmiConfig }
+// 3) Inicializamos Web3Modal
+createWeb3Modal({
+  wagmiConfig,
+  projectId,
+  chains: [sepolia]
+})
