@@ -1,0 +1,78 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+/// Usuario del sistema
+model User {
+  id           Int           @id @default(autoincrement())
+  email        String        @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  // Relaciones
+  boardsOwned  Board[]       @relation("BoardsOwned")
+  memberships  BoardMember[]
+  settings     UserSettings?
+}
+
+/// Tablero de tareas (ej: "Proyecto UAP", "Tesis", etc.)
+model Board {
+  id          Int           @id @default(autoincrement())
+  title       String
+  description String?
+  ownerId     Int
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  // Relaciones
+  owner   User          @relation("BoardsOwned", fields: [ownerId], references: [id])
+  tasks   Task[]
+  members BoardMember[]
+}
+
+/// Tarea dentro de un tablero
+model Task {
+  id          Int       @id @default(autoincrement())
+  boardId     Int
+  title       String
+  description String?
+  completed   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  board       Board     @relation(fields: [boardId], references: [id])
+}
+
+/// Relación usuario-tablero con rol
+model BoardMember {
+  id      Int    @id @default(autoincrement())
+  boardId Int
+  userId  Int
+  role    String @default("VIEWER") // guardamos el rol como texto
+
+  board   Board @relation(fields: [boardId], references: [id])
+  user    User  @relation(fields: [userId], references: [id])
+
+  @@unique([boardId, userId]) // un usuario no se repite en el mismo tablero
+}
+
+/// Configuraciones personalizadas de un usuario
+model UserSettings {
+  id              Int     @id @default(autoincrement())
+  userId          Int     @unique
+  itemsPerPage    Int     @default(10)
+  showCompleted   Boolean @default(true)
+  theme           String  @default("light")   // "light" o "dark"
+  uppercaseTitles Boolean @default(false)
+
+  user            User    @relation(fields: [userId], references: [id])
+}
